@@ -11,71 +11,34 @@
 # **************************************************************************** #
 
 
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra
-RM = rm -f
-NAME = libft.a
-FILES = ft_bzero.c \
-      ft_memset.c \
-      ft_memcpy.c \
-      ft_memchr.c \
-      ft_memcmp.c \
-      ft_memmove.c \
-      ft_strlen.c \
-      ft_isalpha.c \
-      ft_isdigit.c \
-      ft_isalnum.c \
-      ft_isascii.c \
-      ft_isprint.c \
-      ft_toupper.c \
-      ft_tolower.c \
-      ft_strchr.c \
-      ft_strrchr.c \
-      ft_strncmp.c \
-      ft_strlcpy.c \
-      ft_strlcat.c \
-      ft_strnstr.c \
-      ft_atoi.c \
-      ft_calloc.c \
-      ft_strdup.c \
-      ft_substr.c \
-      ft_strjoin.c \
-      ft_strtrim.c \
-      ft_split.c \
-      ft_striteri.c\
-      ft_itoa.c \
-      ft_strmapi.c \
-      ft_putchar_fd.c \
-      ft_putstr_fd.c \
-      ft_putendl_fd.c \
-      ft_putnbr_fd.c
+CC := gcc
+CFLAGS := -Wall -Werror -Wextra
+RM := rm -rf
+NAME := libft.a
+OBJ_PATH := $(shell mkdir -p obj ; echo "obj/")
+FILES_PATH := src/Libft_mondatory/
+B_FILES_PATH := src/Libft_bonus/
+FILES = $(shell ls $(FILES_PATH) | grep ".c$$")
+B_FILES = $(shell ls $(B_FILES_PATH) | grep ".c$$")
+OBJECTS = $(patsubst %.c,$(OBJ_PATH)%.o,$(notdir $(FILES)))
+B_OBJECTS = $(patsubst %.c,$(OBJ_PATH)%.o,$(notdir $(B_FILES)))
+FILES = $(addprefix $(FILES_PATH), $(shell ls $(FILES_PATH) | grep ".c$$"))
+B_FILES = $(addprefix $(B_FILES_PATH), $(shell ls $(B_FILES_PATH) | grep ".c$$"))
 
-B_FILES = ft_lstnew.c \
-      ft_lstadd_front.c \
-      ft_lstsize.c \
-      ft_lstlast.c \
-      ft_lstadd_back.c \
-      ft_lstdelone.c \
-      ft_lstclear.c \
-      ft_lstiter.c \
-      ft_lstmap.c
+all: $(OBJECTS)
 
-OBJECTS = $(FILES:.c=.o)
+$(OBJ_PATH)%.o : $(FILES_PATH)%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+	ar -rc $(NAME) $@
 
-B_OBJECTS = $(B_FILES:.c=.o)
+bonus: $(B_OBJECTS)
 
-all:  $(NAME)
-
-$(NAME): $(FILES)
-	$(CC) $(CFLAGS) -c $(FILES)
-	ar -rc $(NAME) $(OBJECTS)
-
-bonus: $(B_FILES)
-	$(CC) $(CFLAGS) -c $(B_FILES)
-	ar -rc $(NAME) $(B_OBJECTS)
+$(OBJ_PATH)%.o: $(B_FILES_PATH)%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+	ar -rc $(NAME) $@
 
 clean:
-	$(RM) $(B_OBJECTS) $(OBJECTS)
+	$(RM) $(OBJ_PATH)
 
 fclean: clean
 	$(RM) libft.a
