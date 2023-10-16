@@ -25,17 +25,20 @@ B_OBJECTS = $(patsubst %.c,$(OBJ_PATH)%.o,$(notdir $(B_FILES)))
 FILES = $(addprefix $(FILES_PATH), $(shell ls $(FILES_PATH) | grep ".c$$"))
 B_FILES = $(addprefix $(B_FILES_PATH), $(shell ls $(B_FILES_PATH) | grep ".c$$"))
 
-all: $(OBJECTS)
+all: $(OBJ_PATH) $(OBJECTS)
 
 $(OBJ_PATH)%.o : $(FILES_PATH)%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 	ar -rc $(NAME) $@
 
-bonus: $(B_OBJECTS)
+bonus: $(OBJ_PATH) $(B_OBJECTS)
 
 $(OBJ_PATH)%.o: $(B_FILES_PATH)%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 	ar -rc $(NAME) $@
+
+$(OBJ_PATH):
+	mkdir -p obj
 
 clean:
 	$(RM) $(OBJ_PATH)
